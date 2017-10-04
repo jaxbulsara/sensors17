@@ -12,26 +12,28 @@
      28/9/2013
   */
 
+// define pin numbers for stepper motor
 #define IN1  8
 #define IN2  9
 #define IN3  10
 #define IN4  11
 
-int Steps = 0;
-boolean Direction = true;// gre
+int steps = 0;
+boolean direction = true;// gre
 unsigned long last_time;
 unsigned long currentMillis ;
 int steps_left=4095;
 long time;
-void setup()
-{
-Serial.begin(115200);
-pinMode(IN1, OUTPUT);
-pinMode(IN2, OUTPUT);
-pinMode(IN3, OUTPUT);
-pinMode(IN4, OUTPUT);
-// delay(1000);
 
+void setup() {
+	Serial.begin(115200);
+
+	// setup pins as outputs
+	pinMode(IN1, OUTPUT);
+	pinMode(IN2, OUTPUT);
+	pinMode(IN3, OUTPUT);
+	pinMode(IN4, OUTPUT);
+	// delay(1000);
 }
 void loop()
 {
@@ -47,13 +49,13 @@ void loop()
    Serial.println(time);
   Serial.println("Wait...!");
   delay(2000);
-  Direction=!Direction;
+  direction=!direction;
   steps_left=4095;
 }
 
 void stepper(int xw){
   for (int x=0;x<xw;x++){
-switch(Steps){
+switch(steps){
    case 0:
      digitalWrite(IN1, LOW);
      digitalWrite(IN2, LOW);
@@ -109,12 +111,12 @@ switch(Steps){
      digitalWrite(IN4, LOW);
    break;
 }
-SetDirection();
+Setdirection();
 }
 }
-void SetDirection(){
-if(Direction==1){ Steps++;}
-if(Direction==0){ Steps--; }
-if(Steps>7){Steps=0;}
-if(Steps<0){Steps=7; }
+void Setdirection(){
+if(direction==1){ steps++;}
+if(direction==0){ steps--; }
+if(steps>7){steps=0;}
+if(steps<0){steps=7; }
 }

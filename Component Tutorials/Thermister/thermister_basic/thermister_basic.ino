@@ -1,7 +1,6 @@
-#include <stdio.h>
-
-#define SERIES_RESISTOR 10000
 #define THERMISTER_PIN A0
+
+int series_resistor = 10000;
 
 void setup(void) {
 	// initialize serial output at frequency of 9600 baud, or bits per second
@@ -9,30 +8,56 @@ void setup(void) {
 }
 
 void loop(void) {
-	// create an integer variable to hold the analog reading
-	int reading;
+	// create a positive integer variable to hold the analog reading. initialze with value of 0 for average calculation loop
+	float reading = 0;
+
+	// create a floating point value to hold the thermister resistance value
+	float resistance;
 
 	// create a string (character array) to hold serial output
 	char serial_output[100];
 
-	// get reading from analog pin and put in reading variable
-	reading = analogRead(THERMISTER_PIN);
+	// get an average reading over a given number of samples to reduce noise
+	byte mean_sample_num = 10;
 
-	// format a string to contain the reading value and put the formatted string in serial_output
-	sprintf(serial_output, "Analog Reading: %d", reading);
+	// start i at 0 and increment by 1 while it is less than the number of samples to take
+	for (byte i = 0; i < mean_sample_num; i++) {
+		// add analog readings to reading for given number of samples
+		reading += analogRead(THERMISTER_PIN);
+	}
 
-	// print formatted string to serial monitor
-	Serial.println(serial_output);
+	// calculate mean value
+	reading = reading / mean_sample_num;
+
+	// print reading value to serial monitor
+	Serial.print("Analog reading: ");
+	Serial.println(reading);
 
 	// use the reading to calculate the thermister resistance
-	reading = (1023 / reading) - 1;
-	reading = SERIES_RESISTOR / reading;
+	resistance = series_resistor * reading / (1023.0 - reading);
 
-	// format a string to contain the thermister resistance, now stored in the reading variable
-	sprintf(serial_output, "Thermister resistance: %d", reading;);
+	// print resistor value to serial monitor
+	Serial.print("Thermister resistance: ");
+	Serial.println(resistance);
 
-	// print formatted string te serial monitor
-	Serial.println(serial_output);
+	// calculate temperature from resistance
+	// thermister used in this code is a MF52D-103f-3950
+	int B = 3950;
+	float T0 = 298.15;
+
+	float temperature;
+	temperature = resistance / series_resistor;	// (R/Ro)
+	temperature = log(temperature);				// ln(R/Ro)
+	temperature /= B;							// 1/B * ln(R/Ro)
+	temperature += 1.0 / T0;					// + (1/To)
+	temperature = 1.0 / temperature;			// Invert
+	temperature -= 273.15;						// convert to C
+	temperature = temperature * 9 / 5 + 32;		// convert to F
+
+	// print temperature to serial monitor
+	Serial.print("Temperature reading: ");
+	Serial.print(temperature);
+	Serial.println(" *F");
 
 	// wait 1 second before restarting the loop
 	delay(1000);
