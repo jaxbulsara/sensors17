@@ -14,7 +14,7 @@
 
 #include <Stepper.h>
 
-const int stepsPerRevolution = 1500;  // change this to fit the number of steps per revolution
+const int stepsPerRevolution = 64;  // change this to fit the number of steps per revolution
 
 // initialize the stepper library on pins 8 through 11:
 Stepper myStepper(stepsPerRevolution, 8, 10, 9, 11);
@@ -37,4 +37,3 @@ void loop() {
   myStepper.step(-stepsPerRevolution);
   delay(500);
 }
-
