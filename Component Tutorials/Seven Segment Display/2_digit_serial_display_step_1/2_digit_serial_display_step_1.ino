@@ -46,7 +46,7 @@ byte val = 1;
 byte dir_forward = 1;
 
 // delay between loops
-int delay_time = 500;
+int delay_time = 200;
 
 int number_values [] = {63, 6, 91, 79, 102, 109, 125, 39, 127, 111};
 
