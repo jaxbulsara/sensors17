@@ -49,12 +49,20 @@ const byte digitCodes [] = {63, 6, 91, 79, 102, 109, 125, 39, 127, 111};
 const byte digitPins [] = {PIN_DIG_2, PIN_DIG_1};
 const byte numberOfDigits = sizeof(digitPins) / sizeof(byte);
 
+// maxNumber is the first number with more digits than numberOfDigits
+// it is used to check that the input number is valid
+const int maxNumber = pow(10, numberOfDigits);
+
 // VARIABLES
 // stores input number from serial input
 int input;
 
 // stores the input as an array of numbers for display loop
 byte splitInput [numberOfDigits];
+
+// timing variables for display loop
+unsigned long currentMillis;
+unsigned int delay_time = 1;
 
 void setup() {
 	// Initialize serial output
@@ -77,7 +85,7 @@ void setup() {
 	digitalWrite(PIN_LATCH, HIGH);
 
 	// set digits to be off
-	// this code assumes an PNP transistor to be used
+	// this code assumes an PNP transistor is used
 	// ON when the base is LOW
 	// OFF when the base is HIGH
 	digitalWrite(PIN_DIG_1, HIGH);
@@ -96,7 +104,7 @@ void loop() {
 		input = Serial.parseInt();
 
 		// if the parsed integer contains more digits than can be displayed, alert the user.
-		if (input >= pow(10, numberOfDigits)) {
+		if (input >= maxNumber) {
 			Serial.print("Number cannot be longer than ");
 			Serial.print(numberOfDigits);
 			Serial.println(" digits long");
@@ -143,9 +151,8 @@ void loop() {
 		// set latch high so LEDs will enable
 		digitalWrite(PIN_LATCH, HIGH);
 
-		// delay so the digit has time to stay on
-		// the display will be dim without this delay
-		delay(5);
+		currentMillis = millis();
+		while (millis() - currentMillis < delay_time);
 
 		// turn digit off
 		digitalWrite(digitPins[i], HIGH);
