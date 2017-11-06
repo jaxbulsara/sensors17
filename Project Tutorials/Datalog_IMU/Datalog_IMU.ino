@@ -1,3 +1,7 @@
+#include <SPI.h>
+
+#include <SD.h>
+
 // I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
 // 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
@@ -141,6 +145,7 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
+const int chipSelect = 10;
 
 
 // ================================================================
@@ -187,6 +192,24 @@ void setup() {
     Serial.println(F("Testing device connections..."));
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
+/*  Data Logger Initialization  */
+  // Open serial communications and wait for port to open:
+  Serial.begin(115200);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+
+
+  Serial.print("Initializing SD card...");
+
+  // see if the card is present and can be initialized:
+  if (!SD.begin(chipSelect)) {
+    Serial.println("Card failed, or not present");
+    // don't do anything more:
+    return;
+  }
+  Serial.println("card initialized.");
+
     // wait for ready
     Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
@@ -232,9 +255,8 @@ void setup() {
 
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
+
 }
-
-
 
 // ================================================================
 // ===                    MAIN PROGRAM LOOP                     ===
@@ -282,6 +304,39 @@ void loop() {
         // track FIFO count here in case there is > 1 packet available
         // (this lets us immediately read more without waiting for an interrupt)
         fifoCount -= packetSize;
+
+/*  Data Log Write  */
+
+  // make a string for assembling the data to log:
+  String dataString = "";
+
+  // read three sensors and append to the string:
+  for (int analogPin = 4; analogPin < 6; analogPin++) {
+    int sensor = analogRead(analogPin);
+    dataString += String(sensor);
+    if (analogPin < 5) {
+      dataString += ",";
+    }
+  }
+
+  // open the file. note that only one file can be open at a time,
+  // so you have to close this one before opening another.
+  File dataFile = SD.open("datalog.txt", FILE_WRITE);
+
+  // if the file is available, write to it:
+  if (dataFile) {
+    dataFile.println(dataString);
+    dataFile.close();
+    // print to the serial port too:
+    Serial.println(dataString);
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening datalog.txt");
+  }
+
+
+/*    IMU Read      */
 
         #ifdef OUTPUT_READABLE_QUATERNION
             // display quaternion values in easy matrix form: w x y z
@@ -370,3 +425,4 @@ void loop() {
         digitalWrite(LED_PIN, blinkState);
     }
 }
+
