@@ -4,7 +4,7 @@
 // important note from library
 // The sequence of control signals for 4 control wires is as follows:
 // In other words, looping through these 4 signals will result in continuous rotation
-// This is handled by the Stepper object
+// The Stepper object keeps track of where it is in this sequence, so all you need to do is tell it how much to turn
 //
 // Step C0 C1 C2 C3
 // 1  1  0  1  0
