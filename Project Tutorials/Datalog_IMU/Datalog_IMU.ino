@@ -391,12 +391,21 @@ void loop() {
 
         // blink LED to indicate activity
         blinkState = !blinkState;
-        digitalWrite(LED_PIN, blinkState);
-
- /*  Data Log Write  */
-
-  // make a string for assembling the data to log:
+        digitalWrite(LED_PIN, blinkState);  
+        
+   // make a string for assembling the data to log:
   String dataString = "";
+        
+        for (int i = 0, i < 3, i++)
+        {
+            int sensor = (ypr[i] * 180/M_PI);
+            dataString += String(sensor);
+            if (analogPin < 5) 
+            {
+                dataString += ",";
+            }
+        }
+/*
 
   // read three sensors and append to the string:
   for (int analogPin = 4; analogPin <= 5; analogPin++) {
@@ -406,7 +415,8 @@ void loop() {
       dataString += ",";
     }
   }
-
+  
+*/
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
   File dataFile = SD.open("datalog.txt", FILE_WRITE);
