@@ -396,11 +396,11 @@ void loop() {
    // make a string for assembling the data to log:
   String dataString = "";
         
-        for (int i = 0, i < 3, i++)
+        for (int i = 0; i < 3; i++)
         {
             int sensor = (ypr[i] * 180/M_PI);
             dataString += String(sensor);
-            if (analogPin < 5) 
+            if (i < 3) 
             {
                 dataString += ",";
             }
