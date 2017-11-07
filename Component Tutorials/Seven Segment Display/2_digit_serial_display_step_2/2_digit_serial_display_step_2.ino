@@ -9,20 +9,34 @@
 // G -> 7  -> G  -> 64
 // H -> 6  -> DP -> 128
 
+// add the segment NUM to 0 to get the serial value for the number codes below
+
 // NUMBER CODES
-// A 1 indicates that segment is on to produce the number.
-// These codes correspond to the wiring above and may be different based on how you wired your display.
-// num	   a   b   c   d   e   f   g   dp
-// 0       1   1   1   1   1   1   0   0
-// 1       0   1   1   0   0   0   0   0
-// 2       1   1   0   1   1   0   1   0
-// 3       1   1   1   1   0   0   1   0
-// 4       0   1   1   0   0   1   1   0
-// 5       1   0   1   1   0   1   1   0
-// 6       1   0   1   1   1   1   1   0
-// 7       1   1   1   0   0   1   0   0
-// 8       1   1   1   1   1   1   1   0
-// 9       1   1   1   1   0   1   1   0
+// These codes correspond to a COMMON CATHODE display - 1 being ON and 0 being OFF.
+// num	   a   b   c   d   e   f   g   dp  val
+// 0       1   1   1   1   1   1   0   0   63
+// 1       0   1   1   0   0   0   0   0   6
+// 2       1   1   0   1   1   0   1   0   91
+// 3       1   1   1   1   0   0   1   0   79
+// 4       0   1   1   0   0   1   1   0   102
+// 5       1   0   1   1   0   1   1   0   109
+// 6       1   0   1   1   1   1   1   0   125
+// 7       1   1   1   0   0   1   0   0   39
+// 8       1   1   1   1   1   1   1   0   127
+// 9       1   1   1   1   0   1   1   0   111
+
+// These codes correspond to a COMMON ANODE display - 1 being OFF and 0 being ON.
+// num	   a   b   c   d   e   f   g   dp  val
+// 0       0   0   0   0   0   0   1   1   192
+// 1       1   0   0   1   1   1   1   1   249
+// 2       0   0   1   0   0   1   0   1   164
+// 3       0   0   0   0   1   1   0   1   176
+// 4       1   0   0   1   1   0   0   1   153
+// 5       0   1   0   0   1   0   0   1   146
+// 6       0   1   0   0   0   0   0   1   130
+// 7       0   0   0   1   1   0   1   1   216
+// 8       0   0   0   0   0   0   0   1   128
+// 9       0   0   0   0   1   0   0   1   144
 
 // CONSTANTS
 // data pins to shift register
@@ -41,8 +55,13 @@ const byte PIN_DIG_2 = 4;
 
 // these numbers, converted to binary, represent which segments need to be lit up to make the number
 // each code corresponds to the number of its index (position)
+// use this value of digitCodes if you have a COMMON CATHODE display
 //                          0   1  2   3   4    5    6    7   8    9
 const byte digitCodes [] = {63, 6, 91, 79, 102, 109, 125, 39, 127, 111};
+
+// Comment the above and uncomment below if you have a COMMON ANODE display
+//                          0    1    2    3    4    5    6    7    8    9
+// const byte digitCodes [] = {192, 249, 164, 176, 153, 146, 130, 216, 128, 144};
 
 // the digit pins must be in an array in order to loop through them
 // the digits need to be ordered from the rightmost digit to the leftmost to display the number correctly
