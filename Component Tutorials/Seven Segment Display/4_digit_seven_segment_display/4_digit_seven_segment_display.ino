@@ -41,21 +41,21 @@
 // CONSTANTS
 // data pins to shift register
 // connected to RCLK
-const byte PIN_LATCH = 11;
+const byte PIN_LATCH = 9;
 // connected to SRCLK
-const byte PIN_CLOCK = 12;
-// connected to SER
+const byte PIN_CLOCK = 10;
+// connected to SERz
 const byte PIN_DATA = 8;
 
 // digit enable pins - 1 is leftmost digit
 // connected to digit 1
 const byte PIN_DIG_1 = 2;
 // connected to digit 2
-const byte PIN_DIG_2 = 4;
+const byte PIN_DIG_2 = 3;
 // connected to digit 3
-const byte PIN_DIG_3 = 2;
+const byte PIN_DIG_3 = 4;
 // connected to digit 4
-const byte PIN_DIG_4 = 4;
+const byte PIN_DIG_4 = 5;
 
 // these numbers, converted to binary, represent which segments need to be lit up to make the number
 // each code corresponds to the number of its index (position)
@@ -99,6 +99,8 @@ void setup() {
 	// setup digit enable pins to output so you can control which digit is on
 	pinMode(PIN_DIG_1, OUTPUT);
 	pinMode(PIN_DIG_2, OUTPUT);
+  pinMode(PIN_DIG_3, OUTPUT);
+  pinMode(PIN_DIG_4, OUTPUT);
 
 	// the LEDs don't change while you're sending in bits
 	digitalWrite(PIN_LATCH, LOW);
@@ -113,6 +115,8 @@ void setup() {
 	// OFF when the base is HIGH
 	digitalWrite(PIN_DIG_1, HIGH);
 	digitalWrite(PIN_DIG_2, HIGH);
+  digitalWrite(PIN_DIG_3, HIGH);
+  digitalWrite(PIN_DIG_4, HIGH);
 
 	// initial prompt - ask user to input a number
 	Serial.print("Input a ");
