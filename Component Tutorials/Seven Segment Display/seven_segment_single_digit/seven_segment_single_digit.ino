@@ -111,7 +111,7 @@ void loop() {
 		}
 
 		// keep digit on for a little while
-		delay(750);
+		delay(500);
 
 		// turn the segments off and move to the next number.
 		for (j = 0; j < 7; j++) {
