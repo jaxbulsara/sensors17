@@ -1,6 +1,6 @@
 // Define constants - these values don't change throughout the code
 // the pins that will control the leds
-const byte ledPin [] = {2, 3, 4, 5};
+const byte ledPin [] = {2, 3, 10, 5};
 
 // the pins that will read input from the buttons
 const byte buttonPin [] = {6, 7, 8, 9};
@@ -12,6 +12,15 @@ int i;
 
 // variable to hold which button is pressed
 byte whichButton;
+
+// constant to hold the max number of rounds that can be played
+const byte maxRounds = 100;
+
+// variable to count the value of the current round
+byte roundCounter = 0;
+
+// setup array to hold the series of prompts for every round
+byte promptArray [maxRounds];
 
 // setup function - runs once
 void setup() {
@@ -48,21 +57,31 @@ void setup() {
 
 // loop function - runs continuously after setup() is run
 void loop() {
-	Serial.println("Blink random led.");
+	Serial.print("Round number"); Serial.println(roundCounter);
 
-	// generate a random number between 0 and 3
-	int prompt = random(4);
+	// generate a random number between 0 and 3 and put it in the next available spot in the prompt array
+	promptArray[roundCounter] = random(4);
 
-	digitalWrite(ledPin[prompt], HIGH);
+	// blink each led in the sequence of prompts
+	for (i = 0; i <= roundCounter; i++) {
+		digitalWrite(ledPin[promptArray[i]], HIGH);
 
-	// keep led on for 300 milliseconds
-	delay(300);
+		// blink length
+		delay(200);
 
-	digitalWrite(ledPin[prompt], LOW);
+		digitalWrite(ledPin[promptArray[i]], LOW);
 
-	Serial.println("Wait for correct button press.");
+		// delay between led blinks
+		delay(100);
+	}
+
+	Serial.println("Wait for correct button sequence.");
+
+	// set play counter 0 for new round
+	i = 0;
 
 	// a loop to check the value of the button until it turns low
+	// after a correct button press, the round counter will increment and the loop will wait for the next correct button press in the sequence
 	while(1) {
 		// check if a button is pressed and which one
 		whichButton = checkButton();
@@ -70,28 +89,39 @@ void loop() {
 		// check if a button has been pressed
 		if (whichButton != 4) {
 			// if a button has been pressed, check if it's the same as the prompt
-			if (whichButton == prompt) {
-				digitalWrite(ledPin[prompt], HIGH);
+			if (whichButton == promptArray[i]) {
+				digitalWrite(ledPin[promptArray[i]], HIGH);
 
-				// keep led on for 300 milliseconds
-				delay(300);
+				// blink length
+				delay(200);
 
-				digitalWrite(ledPin[prompt], LOW);
+				digitalWrite(ledPin[promptArray[i]], LOW);
 
 				// wait for button to depress
 				while (whichButton != 4) {
 					whichButton = checkButton();
 				}
+			}
 
-				// leave while loop
+			// if the play counter is equal to the round counter, the sequence has been completed.
+			// exit the user round loop
+			if (i == roundCounter) {
+				delay(1000);
 				break;
 			}
+
+			// increment play counter so the while loop waits for the next prompt in the sequence
+			i++;
 		}
 
+		// wait a little bit to prevent false readings due to bouncing
 		delay(20);
 	}
 
-	Serial.println("Button pressed!\n");
+	Serial.println("Correct sequence pressed!");
+
+	Serial.println("Incrementing roundCounter.");
+	roundCounter++;
 
 	delay(500);
 }
