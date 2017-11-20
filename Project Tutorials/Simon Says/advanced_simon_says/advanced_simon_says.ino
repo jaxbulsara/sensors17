@@ -78,17 +78,31 @@ void setup() {
 	// set up lcd
 	lcd.begin(16,2);
 	lcd.clear();
+
+	// setup up random seed with floating analog input
+	int seed = analogRead(0);
+	randomSeed(seed);
 }
 
 void loop() {
-	btn_read();
-	for (i = 0; i < num_of_options; i++) {
-		setLed(i, btn_state[i]);
-	}
+	// Display initial message
+	// wait for button press to play
+	lcd.clear();
+	lcd.setCursor(0,0);
+	lcd.print("Press any button");
+	lcd.setCursor(0,1);
+	lcd.print("to play!");
 
+	// wait for button and light the led of the button that was pressed.
+	// then wait for the button to be depressed
+	waitForBtnPress();
+	setLedByBtn();
+	writeRegister();
+	waitForDePress();
+	clearLed();
 	writeRegister();
 
-	delay(10);
+	// begin game
 }
 
 // set the desired led HIGH or LOW
@@ -110,6 +124,13 @@ void setLed(byte num, bool value) {
 void clearLed() {
 	for (i = 0; i < 8; i++) {
 		setLed(i, LOW);
+	}
+}
+
+void setLedByBtn() {
+	clearLed();
+	for (i = 0; i < num_of_options; i++) {
+		setLed(i, btn_state[i]);
 	}
 }
 
@@ -157,4 +178,37 @@ byte shiftIn(byte btn_data, byte btn_clock) {
 	}
 
 	return state;
+}
+
+void waitForBtnPress() {
+	bool pressFlag = 0;
+
+	while (not pressFlag) {
+		btn_read();
+		for (i = 0; i < num_of_options; i++) {
+			if (btn_state[i] == 1) {
+				pressFlag = 1;
+				break;
+			}
+		}
+	}
+}
+
+void waitForDePress() {
+	bool pressFlag = 1;
+
+	while (pressFlag) {
+		btn_read();
+		for (i = 0; i < num_of_options; i++) {
+			// if every button is depressed, then pressFlag will stay false and end the while loop
+			if (btn_state[i] == 0) {
+				pressFlag = 0;
+			} else {
+				pressFlag = 1;
+				// leave loop so pressFlag cannot be overwritten
+				break;
+			}
+		}
+		Serial.println("");
+	}
 }
