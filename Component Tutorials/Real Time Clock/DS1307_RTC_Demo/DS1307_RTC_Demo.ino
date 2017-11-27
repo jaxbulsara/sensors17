@@ -21,7 +21,7 @@ SparkFun Real Time Clock Module (v14)
 // E.g. October 31, 2016: 10/31/16 vs. 31/10/16
 #define PRINT_USA_DATE
 
-#define SQW_INPUT_PIN 6   // Input pin to read SQW
+#define SQW_INPUT_PIN 7   // Input pin to read SQW
 #define SQW_OUTPUT_PIN 13 // LED to indicate SQW's state
 
 void setup() 

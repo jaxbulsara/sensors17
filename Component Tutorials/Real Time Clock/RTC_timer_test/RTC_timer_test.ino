@@ -25,15 +25,12 @@ SparkFun Real Time Clock Module (v14)
 #define SQW_OUTPUT_PIN 13 // LED to indicate SQW's state
 
 /* Button pins */
-int ledPin = 7;
 int buttonApin = 12;
 int buttonBpin = 11;
-byte leds = 0;
 
 void setup() 
 {
 /* Button setup */
-  pinMode(ledPin, OUTPUT);
   pinMode(buttonApin, INPUT_PULLUP);  
   pinMode(buttonBpin, INPUT_PULLUP);  
 
@@ -57,8 +54,6 @@ void loop()
 
   if (digitalRead(buttonApin) == LOW)
   {
-    digitalWrite(ledPin, HIGH);
- 
     // Use the rtc.setTime(s, m, h, day, date, month, year)
     // function to explicitly set the time:
     // set time to 00:00:00 | Sunday January 1, 2001:
@@ -81,7 +76,6 @@ void loop()
       // pin 13 LED. (It should blink at 1Hz.)
       digitalWrite(SQW_OUTPUT_PIN, digitalRead(SQW_INPUT_PIN));
     }
-    digitalWrite(ledPin, LOW);
   }
   
 }
