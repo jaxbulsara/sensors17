@@ -306,9 +306,6 @@ void playGame() {
 			// check which button is pressed
 			which_button = checkButton();
 
-			Serial.print("Button ");
-			Serial.println(which_button);
-
 			// check if the pressed button is correct
 			if (which_button != num_of_options) {
 				if (which_button == prompt_array[user_round]) {
