@@ -22,7 +22,7 @@ void setup() {
 	Serial.begin(9600);
 
 	// print a debug statement
-	Serial.println("Setup completed successfully.")
+	Serial.println("Setup completed successfully.");
 }
 
 // loop function - runs continuously after setup() is run
@@ -32,11 +32,11 @@ void loop() {
 	digitalWrite(ledPin, HIGH);
 
 	// keep led on for 300 milliseconds
-	delay(300)
+	delay(300);
 
 	digitalWrite(ledPin, LOW);
 
-	Serial.println("Wait for button press.")
+	Serial.println("Wait for button press.");
 
 	// a loop to check the value of the button until it turns low
 	while (digitalRead(buttonPin) == HIGH) {
