@@ -120,11 +120,11 @@ void setup()
   // You can use the autoTime() function to set the RTC's clock and
   // date to the compiliers predefined time. (It'll be a few seconds
   // behind, but close!)
-  rtc.autoTime();
+  //rtc.autoTime();
   // Or you can use the rtc.setTime(s, m, h, day, date, month, year)
   // function to explicitly set the time:
   // e.g. 5:39:00 | Friday November 24, 2017:
-  //rtc.setTime(00, 39, 05, 5, 24, 11, 17);  // Uncomment to manually set time
+  rtc.setTime(00, 24, 9, 4, 30, 11, 17);  // Uncomment to manually set time
   rtc.set12Hour(); // Use rtc.set12Hour to set to 12-hour mode
 
   /* -------------------- DISPLAY SETUP -------------------- */
